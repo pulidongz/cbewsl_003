@@ -6,8 +6,6 @@ import database from './src/utils/database.js';
 
 import UserManagementRouter from './src/components/UserManagement/routes/UserManagementRouter.js';
 
-import Users from './src/components/UserManagement/models/Users.js';
-
 dotenv.config({path: '.env'});
 
 const app = express();
@@ -39,19 +37,19 @@ app.use('/api/earthquake_data', (req, res) => res.send('Earthquake data api'));
 app.use('/api/rainfall_data', (req, res) => res.send('Rainfall data api'));
 app.use('/api/alert_generation', (req, res) => res.send('Alert generation api'));
 
+// app.listen(port, () => console.log(`Server running on port ${port}`));
+
 // ***uncomment when running in production***
 // Listen to both http & https ports
-// const httpServer = http.createServer(app);
-// const httpsServer = https.createServer({
-//   key: fs.readFileSync('/location/of/privkey.pem'),
-//   cert: fs.readFileSync('location/of/cert.pem'),
-// }, app);
-// httpServer.listen(80, () => {
-//   console.log('HTTP Server running on port 80');
-// });
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer({
+  key: fs.readFileSync('dynaslope.key'),
+  cert: fs.readFileSync('dynaslope.crt'),
+}, app);
+httpServer.listen(80, () => {
+  console.log('HTTP Server running on port 80');
+});
 
-// httpsServer.listen(443, () => {
-//   console.log('HTTPS Server running on port 443');
-// });
-
-app.listen(port, () => console.log(`Server running on port ${port}`));
+httpsServer.listen(443, () => {
+  console.log('HTTPS Server running on port 443');
+});
