@@ -1,8 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import fs from 'fs';
 import database from './src/utils/database.js';
+import verifyToken from './src/utils/auth_jwt.js';
+import fs from 'fs';
 import http from 'http';
 import https from 'https';
 
@@ -29,6 +30,11 @@ app.use(express.urlencoded({ extended: true }));
 //Bind connection to error event (to get notification of connection errors)
 database.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+app.get('/', (req, res) => {
+  // Server health check:
+  res.status(200).send({data: {message: "Welcome to CBEWS-L-MERN API"}});
+});
+
 app.use('/api/user_management', UserManagementRouter);
 app.use('/api/data_visualization', (req, res) => res.send('Data visualization api'));
 app.use('/api/community_risk_assessment', (req, res) => res.send('Community risk assessment api'));
@@ -38,6 +44,18 @@ app.use('/api/subsurface_data', (req, res) => res.send('Subsurface data api'));
 app.use('/api/earthquake_data', (req, res) => res.send('Earthquake data api'));
 app.use('/api/rainfall_data', (req, res) => res.send('Rainfall data api'));
 app.use('/api/alert_generation', (req, res) => res.send('Alert generation api'));
+
+// This should be the last route else any after it won't work
+app.use("*", (req, res) => {
+  res.status(404).json({
+    message: "Fail",
+    info: "Page not found",
+    error: {
+      statusCode: 404,
+      message: "You reached a route that is not defined on this server",
+    },
+  });
+});
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
