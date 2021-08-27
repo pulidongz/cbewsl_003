@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config({path: '.env'});
 
-const url = 'mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db'
+const url = 'CURRENT DB: mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db'
 
 console.log(url);
 

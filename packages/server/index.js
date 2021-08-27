@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import database from './src/utils/database.js';
-import verifyToken from './src/utils/auth_jwt.js';
+import authVerifyToken from './src/utils/authVerifyToken.js';
 import fs from 'fs';
 import http from 'http';
 import https from 'https';
@@ -26,6 +26,8 @@ app.use(
 app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+// Use JWT for API authentication
+app.use(authVerifyToken);
 
 //Bind connection to error event (to get notification of connection errors)
 database.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -57,19 +59,4 @@ app.use("*", (req, res) => {
   });
 });
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
-
-// ***uncomment when running in production***
-// Listen to both http & https ports
-// const httpServer = http.createServer(app);
-// const httpsServer = https.createServer({
-//   key: fs.readFileSync('dynaslope.key'),
-//   cert: fs.readFileSync('dynaslope.crt'),
-// }, app);
-// httpServer.listen(80, () => {
-//   console.log('HTTP Server running on port 80');
-// });
-
-// httpsServer.listen(443, () => {
-//   console.log('HTTPS Server running on port 443');
-// });
+app.listen(port, () => console.log(`\nServer running on port ${port}`));
