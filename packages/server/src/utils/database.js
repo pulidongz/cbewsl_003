@@ -3,16 +3,23 @@ import dotenv from 'dotenv';
 
 dotenv.config({path: '.env'});
 
-let url1 = 'COMMONS_DB: mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db'
-let url2 = 'SENSLOPE_DB: mongodb://'+ process.env.DB_HOST +':27017/senslopedb'
+var connDb = [];
+let commons_url = 'COMMONS_DB: mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db'
+let senslope_url = 'SENSLOPE_DB: mongodb://'+ process.env.DB_HOST +':27017/senslopedb'
 
-console.log(url1);
-console.log(url2);
 
-const db1 = () => mongoose.createConnection(url1, 
-    { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+connDb.Commons = mongoose.createConnection(commons_url, 
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+.on("error", console.error.bind(console, "MongoDB Connection Error>> : "))
+.once("open", function() {
+  console.log(commons_url);
+});
 
-const db2 = () => mongoose.createConnection(url2, 
-  { useNewUrlParser: true, useUnifiedTopology: true, seCreateIndex: true });
+connDb.Senslope = mongoose.createConnection(senslope_url, 
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+.on("error", console.error.bind(console, "MongoDB Connection Error>> : "))
+.once("open", function() {
+  console.log(senslope_url);
+});
 
-export default { db1, db2 };
+export default connDb;

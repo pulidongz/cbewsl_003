@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
-import db1 from './src/utils/database.js';
+import connDb from './src/utils/database.js';
 import authVerifyToken from './src/utils/authVerifyToken.js';
 
 
@@ -16,6 +16,7 @@ const port = process.env.PORT;
 
 app.use(helmet());
 app.use(
+  helmet(),
     cors({
       credentials: true,
       origin: '*',
@@ -28,10 +29,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Use JWT for API authentication
 app.use(authVerifyToken);
-
-//Bind connection to error event (to get notification of connection errors)
-// db1.on('error', console.error.bind(console, 'MongoDB connection error:'));
-// db2.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.get('/', (req, res) => {
   // Server health check:

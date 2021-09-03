@@ -1,12 +1,8 @@
 import mongoose from 'mongoose';
+import connDb from '../../../utils/database.js';
 
-var url1 = 'COMMONS_DB: mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db'
-const db1 = mongoose.createConnection(url1, 
-	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
-const Schema = mongoose.Schema;
-
-const UsersSchema = new Schema(
+const UsersSchema = new mongoose.Schema(
 	{
 		user_info: {
 			username: {
@@ -115,6 +111,6 @@ const UsersSchema = new Schema(
 	{ timestamps: true }
 );
 
-const Users = db1.model('users', UsersSchema);
+const Users = connDb.Commons.model('users', UsersSchema);
 
 export default Users;
