@@ -21,7 +21,7 @@ export default async function Verify(request, response){
 		// Check if otp_code = otp_code in db
 		if (result.otp_code === otp_code) {
 			// Find and delete the otp_code from db
-			result.otp_code = "";
+			result.otp_code = null;
 			result.is_verified = true;
 			result.save((err) => {
 				if (err) {
