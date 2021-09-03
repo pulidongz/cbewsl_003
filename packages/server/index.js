@@ -1,20 +1,20 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
-import database from './src/utils/database.js';
+import db1 from './src/utils/database.js';
 import authVerifyToken from './src/utils/authVerifyToken.js';
-import fs from 'fs';
-import http from 'http';
-import https from 'https';
+
 
 import UserManagementRouter from './src/components/UserManagement/routes/UserManagementRouter.js';
+
 
 dotenv.config({path: '.env'});
 
 const app = express();
 const port = process.env.PORT;
 
-
+app.use(helmet());
 app.use(
     cors({
       credentials: true,
@@ -30,7 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(authVerifyToken);
 
 //Bind connection to error event (to get notification of connection errors)
-database.on('error', console.error.bind(console, 'MongoDB connection error:'));
+// db1.on('error', console.error.bind(console, 'MongoDB connection error:'));
+// db2.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.get('/', (req, res) => {
   // Server health check:

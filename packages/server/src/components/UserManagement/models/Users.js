@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
+var url1 = 'COMMONS_DB: mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db'
+const db1 = mongoose.createConnection(url1, 
+	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
 const Schema = mongoose.Schema;
 
@@ -115,6 +115,6 @@ const UsersSchema = new Schema(
 	{ timestamps: true }
 );
 
-const Users = mongoose.model('users',UsersSchema);
+const Users = db1.model('users', UsersSchema);
 
 export default Users;

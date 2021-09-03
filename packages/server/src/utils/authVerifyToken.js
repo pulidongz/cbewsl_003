@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config({path: '../../.env'});
 
 var tokens = jwt.sign(process.env.PAYLOAD, process.env.SECRET_KEY);
-console.log(`JWT TOKEN: ${tokens}`);
+console.log(`JWT_TOKEN: ${tokens}`);
 
 const authVerifyToken = (req, res, next) => {
     const token = req.headers["x-access-token"];
