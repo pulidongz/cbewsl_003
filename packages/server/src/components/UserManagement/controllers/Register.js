@@ -7,8 +7,7 @@ export default async function Register(request, response){
 	var {username, password, mobile_number} = request.body;
 
 	const generate_otp = otpGenerator.generate(12, { upperCase: false, specialChars: false });
-	
-	//TODO: Add more field validation
+
 	if(!username){
 		return response
 		.status(400)
@@ -46,7 +45,7 @@ export default async function Register(request, response){
 			if (err) {
 				return response
 				.status(500)
-				.json({ message: "Fail", error: err });
+				.json({ message: "Fail", data: err });
 			}
 			if(result) {
 				// User already exists
@@ -83,7 +82,7 @@ export default async function Register(request, response){
 				.status(500)
 				.json({
 					message: "Fail",
-					error: err
+					data: err
 				});
 			}
 	}).catch(err => console.log(err));;
