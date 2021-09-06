@@ -16,7 +16,7 @@ export async function FetchResource(request, response){
                     return response
                     .status(404)
                     .json({
-                        message: "Fail", data: "Resource does not exist"
+                        message: "Fail", data: "Resource data does not exist"
                     });
                 }
                 return response
@@ -33,7 +33,7 @@ export async function FetchResource(request, response){
                 if (!result) {
                     return response
                     .status(404)
-                    .json({ message: "Fail", data: "Resource does not exist" });
+                    .json({ message: "Fail", data: "Resource data does not exist" });
                 }
                 return response
                 .status(200)

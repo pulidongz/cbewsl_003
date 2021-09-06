@@ -10,10 +10,11 @@ const RiskProfileSchema = new mongoose.Schema(
 			trim: true,
 		},
 		risk_count: {
-			type: String,
+			type: Number,
 			required: true,
 			trim: true,
 			maxLength: 10,
+			default: 0,
 		},
 		designee: {
 			type: String,
