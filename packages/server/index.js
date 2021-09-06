@@ -7,6 +7,7 @@ import authVerifyToken from './src/utils/authVerifyToken.js';
 
 
 import UserManagementRouter from './src/components/UserManagement/routes/UserManagementRouter.js';
+import CRARouter from './src/components/CommunityRiskAssessment/routes/CRARouter.js';
 
 
 dotenv.config({path: '.env'});
@@ -37,7 +38,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/user_management', UserManagementRouter);
 app.use('/api/data_visualization', (req, res) => res.send('Data visualization api'));
-app.use('/api/community_risk_assessment', (req, res) => res.send('Community risk assessment api'));
+app.use('/api/cra', CRARouter);
 app.use('/api/ewi_dissemination', (req, res) => res.send('EWI dissemination api'));
 app.use('/api/surficial_data', (req, res) => res.send('Surficial data api'));
 app.use('/api/subsurface_data', (req, res) => res.send('Subsurface data api'));
