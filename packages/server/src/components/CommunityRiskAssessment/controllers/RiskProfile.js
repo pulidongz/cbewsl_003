@@ -1,7 +1,6 @@
 import RiskProfile from '../models/RiskProfileModel.js';
 
 export async function FetchRiskProfile(request, response){
-
     const rp_id = request.params.id;
     try {
         if(rp_id === "all"){

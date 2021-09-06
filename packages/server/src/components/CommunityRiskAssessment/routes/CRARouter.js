@@ -4,11 +4,13 @@ import {
     FetchResource,
     UpdateResource
 } from '../controllers/Resource.js';
+
 import {
     FetchRiskProfile,
     UpdateRiskProfile,
     DeleteRiskProfile
 } from '../controllers/RiskProfile.js'
+
 import {
     FetchAllHazardMap,
     DeleteHazardMap,
