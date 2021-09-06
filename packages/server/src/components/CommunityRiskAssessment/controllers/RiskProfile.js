@@ -96,7 +96,7 @@ export async function DeleteRiskProfile(request, response){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: "Failed to delete Risk Profile data" });
+                .json({ message: "Fail", data: `Failed to delete Risk Profile data: ${err}`});
             }
             if (!result) {
                 return response
