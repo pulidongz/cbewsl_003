@@ -17,7 +17,6 @@ const port = process.env.PORT;
 
 app.use(helmet());
 app.use(
-  helmet(),
     cors({
       credentials: true,
       origin: '*',
