@@ -1,12 +1,13 @@
 import HazardMap from '../models/HazardMapModel.js';
 
+
 export async function FetchAllHazardMap(request, response){
     try {
         await HazardMap.find({}, (err, result) => {
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: `Failed to fetch Hazard Map data: ${err}`});
+                .json({ message: "Fail", data: `Failed to fetch Hazard Map: ${err}`});
             }
             if (!result) {
                 return response
@@ -24,7 +25,7 @@ export async function FetchAllHazardMap(request, response){
         console.log(err);
         return response
         .status(400)
-        .json({ message: "Fail", data: `Failed to fetch Hazard Map data: ${err}`});
+        .json({ message: "Fail", data: `Failed to fetch Hazard Map: ${err}`});
     };
 }
 
@@ -35,12 +36,12 @@ export async function DeleteHazardMap(request, response){
             if (err) {
                 return response
                 .status(400)
-        .json({ message: "Fail", data: `Failed to delete Hazard Map data: ${err}`});
+        .json({ message: "Fail", data: `Failed to delete Hazard Map: ${err}`});
             }
             if (!result) {
                 return response
                 .status(404)
-                .json({ message: "Fail", data: "Hazard Map data does not exist" });
+                .json({ message: "Fail", data: "Hazard Map does not exist" });
             }
             return response
             .status(200)
@@ -50,10 +51,45 @@ export async function DeleteHazardMap(request, response){
         console.log(err);
         return response
         .status(400)
-        .json({ message: "Fail", data: `Failed to delete Hazard Map data: ${err}`});
+        .json({ message: "Fail", data: `Failed to delete Hazard Map: ${err}`});
     };
 }
 
 export async function UploadHazardMap(request, response){
+    var {filename, filetype, filesize, uploaded_by, ts_upload } = request.body;
 
+    try {
+        await HazardMap.findOneAndUpdate(
+            {
+                filename: filename
+            },
+            {
+                filename: filename, 
+                filetype: filetype, 
+                filesize: filesize,
+                uploaded_by: uploaded_by, 
+                ts_upload: ts_upload
+            },
+            {
+                upsert: true
+            },
+            (err, result) => {
+                if (err) {
+                    return response
+                    .status(500)
+                    .json({ message: "Fail", data: `Failed to upload Hazard Map: ${err}` });
+                }
+                return response
+                .status(200)
+                .json({ 
+                    message: "Success",
+                });
+            }
+        );
+    } catch (err) {
+        console.log(err);
+        return response
+        .status(400)
+        .json({ message: "Fail", data: `Failed to upload Hazard Map: ${err}`});
+    }
 }
