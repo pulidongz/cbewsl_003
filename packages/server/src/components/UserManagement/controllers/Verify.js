@@ -2,7 +2,7 @@ import Users from "../models/Users.js";
 import crypto from 'crypto';
 
 export default async function Verify(request, response){
-  var {user_id, otp_code} = request.body;
+  const {user_id, otp_code} = request.body;
 
 	await Users.findById(user_id, (err, result) => {
 		if (err) {
