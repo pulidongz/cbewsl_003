@@ -10,9 +10,9 @@ let options = {
   useUnifiedTopology: true,
   useCreateIndex: true
 }
-let commons_url = 'COMMONS_DB: mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db'
-let cbewsl_site_collections_url = 'CBEWSL_DB: mongodb://'+ process.env.DB_HOST +':27017/cbewsl_site_collections_db'
-let senslope_url = 'SENSLOPE_DB: mongodb://'+ process.env.DB_HOST +':27017/senslopedb'
+const commons_url = 'COMMONS_DB: mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db'
+const cbewsl_site_collections_url = 'CBEWSL_DB: mongodb://'+ process.env.DB_HOST +':27017/cbewsl_site_collections_db'
+const senslope_url = 'SENSLOPE_DB: mongodb://'+ process.env.DB_HOST +':27017/senslopedb'
 
 connDb.Commons = mongoose.createConnection(commons_url, options)
 .on("error", console.error.bind(console, "MongoDB Connection Error>> : "))

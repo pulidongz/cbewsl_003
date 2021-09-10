@@ -1,6 +1,7 @@
 import Users from "../models/Users.js";
 import crypto from 'crypto';
 
+
 export default async function Login(request, response){
     var {username, password} = request.body;
     
@@ -30,7 +31,6 @@ export default async function Login(request, response){
 					{'user_info.password': password}
 				] 
 			}, (err, result) => {
-			console.log(result);
 			if (err) {
 				return response
 				.status(500)
@@ -44,6 +44,8 @@ export default async function Login(request, response){
 					user_details: "Invalid username or password"
 				});
 			} else {
+				request.session.user_details = result;
+				console.log(request.session);
 				return response
 				.status(200)
 				.json({ 

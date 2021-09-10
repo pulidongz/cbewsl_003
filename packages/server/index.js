@@ -1,10 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import connDb from './src/utils/database.js';
+import MongoStore from 'connect-mongo';
 import authVerifyToken from './src/utils/authVerifyToken.js';
-
 
 import UserManagementRouter from './src/components/UserManagement/routes/UserManagementRouter.js';
 import CRARouter from './src/components/CommunityRiskAssessment/routes/CRARouter.js';
@@ -14,6 +16,17 @@ dotenv.config({path: '.env'});
 
 const app = express();
 const port = process.env.PORT;
+const validity = 1000 * 60 * 60 * 24;
+
+const sessionStore = MongoStore.create({ 
+  mongoUrl: 'mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db', 
+  autoRemove: 'interval', 
+  autoRemoveInterval: 10,
+  mongoOptions: {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+});
 
 app.use(helmet());
 app.use(
@@ -29,6 +42,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Use JWT for API authentication
 app.use(authVerifyToken);
+// Use session for API authentication
+app.use(session({
+  secret: process.env.SECRET_KEY,
+  saveUninitialized:true,
+  cookie: { maxAge: validity },
+  resave: false,
+  store: sessionStore
+}));
+// parse cookies
+app.use(cookieParser());
+
 
 app.get('/', (req, res) => {
   // Server health check:
@@ -36,8 +60,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/user_management', UserManagementRouter);
-app.use('/api/data_visualization', (req, res) => res.send('Data visualization api'));
 app.use('/api/cra', CRARouter);
+app.use('/api/data_visualization', (req, res) => res.send('Data visualization api'));
 app.use('/api/ewi_dissemination', (req, res) => res.send('EWI dissemination api'));
 app.use('/api/surficial_data', (req, res) => res.send('Surficial data api'));
 app.use('/api/subsurface_data', (req, res) => res.send('Subsurface data api'));
