@@ -50,30 +50,34 @@ export async function FetchRiskProfile(request, response){
 export async function UpdateRiskProfile(request, response){
     const rp_id = request.params.id;
     var {profile, risk_count, designee, risk_type, ts_updated, updated_by} = request.body;
+
     try {
         await RiskProfile.findByIdAndUpdate(
             rp_id, 
-            {
-                $set:{
-                    profile: profile,
-                    risk_count: risk_count,
-                    designee: designee,
-                    risk_type: risk_type,
-                    ts_updated: ts_updated,
-                    updated_by: updated_by,
-                },
-                // $setOnInsert: {
-                //     _id:  new mongoose.Types.ObjectId()
-                // }
-            },
-            {
-                upsert: true
+            {   
+                profile: profile,
+                risk_count: risk_count,
+                designee: designee,
+                risk_type: risk_type,
+                ts_updated: ts_updated,
+                updated_by: updated_by,   
             },
             (err, result) => {
             if (err) {
                 return response
                 .status(500)
                 .json({ message: "Fail", data: "Failed to update Risk Profile data" });
+            }
+            if (!result) {
+                let newRiskProfile = new RiskProfile({
+                    profile: profile,
+                    risk_count: risk_count,
+                    designee: designee,
+                    risk_type: risk_type,
+                    ts_updated: ts_updated,
+                    updated_by: updated_by,
+				});
+				newRiskProfile.save();
             }
             return response
             .status(200)
