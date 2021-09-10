@@ -4,11 +4,12 @@ import otpGenerator from 'otp-generator';
 
 
 export default async function Register(request, response){
-	var {username, password, mobile_number} = request.body;
+	// var {username, password, mobile_number} = request.body;
+	const data = request.body;
 
 	const generate_otp = otpGenerator.generate(12, { upperCase: false, specialChars: false });
 
-	if(!username){
+	if(!data.username){
 		return response
 		.status(400)
 		.json({
@@ -16,7 +17,7 @@ export default async function Register(request, response){
 			user_details: "Username not provided"
 		});
 	}
-	if(!password){
+	if(!data.password){
 		return response
 		.status(400)
 		.json({
@@ -24,7 +25,7 @@ export default async function Register(request, response){
 			user_details: "Password not provided"
 		});
 	}
-	if(!mobile_number){
+	if(!data.mobile_number){
 		return response
 		.status(400)
 		.json({
@@ -33,13 +34,13 @@ export default async function Register(request, response){
 		});
 	}
 
-	password = crypto.createHash('sha512').update(password).digest('hex');
+	data.password = crypto.createHash('sha512').update(data.password).digest('hex');
 
 	// Check if credentials already exist
 	await Users.findOne({
 		$and: [
-			{'user_info.username': username.toLowerCase()},
-			{'user_info.password': password}
+			{'user_info.username': data.username.toLowerCase()},
+			{'user_info.password': data.password}
 		]},
 		(err, result) => {
 			if (err) {
@@ -60,9 +61,7 @@ export default async function Register(request, response){
 			try {
 				let newUser = new Users({
 					user_info:	{
-						username: username,
-						password: password,
-						mobile_number: mobile_number,
+						...data
 					},
 					is_verified: false,
 					accounts_status: "active",

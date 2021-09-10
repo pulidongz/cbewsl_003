@@ -2,9 +2,10 @@ import Users from "../models/Users.js";
 import crypto from 'crypto';
 
 export async function UpdateUserInfo(request, response){
-	var {user_id, username, password, mobile_number, firstname, lastname} = request.body;
+	const data = request.body;
 
-	if(!user_id || !username || !password || !mobile_number || !firstname || !lastname){
+	if(!data.user_id || !data.username || !data.password ||
+		!data.mobile_number || !data.firstname || !data.lastname){
 		return response
 		.status(400)
 		.json({
@@ -12,17 +13,11 @@ export async function UpdateUserInfo(request, response){
 			user_details: "Error missing fields"
 		});
 	}
-	password = crypto.createHash('sha512').update(password).digest('hex');
+	data.password = crypto.createHash('sha512').update(data.password).digest('hex');
 	try {
-		await Users.findByIdAndUpdate(user_id,
+		await Users.findByIdAndUpdate(data.user_id,
 			{
-				user_info: {
-					username: username,
-					password: password,
-					mobile_number: mobile_number,
-					firstname: firstname,
-					lastname: lastname
-				}
+				user_info: { ...data }
 			},
 			{
 				new: true
@@ -50,9 +45,9 @@ export async function UpdateUserInfo(request, response){
 }
 
 export async function UpdateUserProfile(request, response){
-	var {user_id, gender, site, role, birthdate, salutation, suffix, full_address, street, barangay, municipality, city, country} = request.body;
+	const data = request.body;
 
-	if(!user_id){
+	if(!data.user_id){
 		return response
 		.status(400)
 		.json({
@@ -62,22 +57,9 @@ export async function UpdateUserProfile(request, response){
 	}
 	try{
 		await Users.findByIdAndUpdate(
-			user_id,
+			data.user_id,
 			{
-				user_profile: {
-					gender: gender,
-					site: site,
-					role: role,
-					birthdate: birthdate,
-					salutation: salutation,
-					suffix: suffix,
-					full_address: full_address,
-					street: street,
-					barangay: barangay,
-					municipality: municipality,
-					city: city,
-					country: country
-				}
+				user_profile: { ...data }
 			},
 			{
 				new: true
@@ -99,7 +81,7 @@ export async function UpdateUserProfile(request, response){
 		console.log(err);
         return response
         .status(500)
-        .json({ message: "Fail", data: `Failed to fetch user details ${err}`});
+        .json({ message: "Fail", data: `Failed to fetch user details ${err}` });
 	};
 }
 
