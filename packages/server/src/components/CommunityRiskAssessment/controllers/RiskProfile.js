@@ -49,19 +49,12 @@ export async function FetchRiskProfile(request, response){
 
 export async function UpdateRiskProfile(request, response){
     const rp_id = request.params.id;
-    var {profile, risk_count, designee, risk_type, ts_updated, updated_by} = request.body;
+    const data = request.body;
 
     try {
         await RiskProfile.findByIdAndUpdate(
             rp_id, 
-            {   
-                profile: profile,
-                risk_count: risk_count,
-                designee: designee,
-                risk_type: risk_type,
-                ts_updated: ts_updated,
-                updated_by: updated_by,   
-            },
+            { ...data },
             (err, result) => {
             if (err) {
                 return response
@@ -69,14 +62,7 @@ export async function UpdateRiskProfile(request, response){
                 .json({ message: "Fail", data: "Failed to update Risk Profile data" });
             }
             if (!result) {
-                let newRiskProfile = new RiskProfile({
-                    profile: profile,
-                    risk_count: risk_count,
-                    designee: designee,
-                    risk_type: risk_type,
-                    ts_updated: ts_updated,
-                    updated_by: updated_by,
-				});
+                let newRiskProfile = new RiskProfile({ ...data });
 				newRiskProfile.save();
             }
             return response

@@ -56,19 +56,15 @@ export async function DeleteHazardMap(request, response){
 }
 
 export async function UploadHazardMap(request, response){
-    var {filename, filetype, filesize, uploaded_by, ts_upload } = request.body;
+    const data = request.body;
 
     try {
         await HazardMap.findOneAndUpdate(
             {
-                filename: filename
+                filename: data.filename
             },
             {
-                filename: filename, 
-                filetype: filetype, 
-                filesize: filesize,
-                uploaded_by: uploaded_by, 
-                ts_upload: ts_upload
+                ...data
             },
             {
                 upsert: true

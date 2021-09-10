@@ -51,17 +51,12 @@ export async function FetchResource(request, response){
 
 export async function UpdateResource(request, response){
     const resource_id = request.params.id;
-    var {resource, count, ts_updated, updated_by} = request.body;
+    const data = request.body;
 
     try {
         await Resource.findByIdAndUpdate(
             resource_id, 
-            {
-                resource: resource,
-                count: count,
-                ts_updated: ts_updated,
-                updated_by: updated_by,
-            },
+            { ...data },
             (err, result) => {
             if (err) {
                 return response
@@ -69,12 +64,7 @@ export async function UpdateResource(request, response){
                 .json({ message: "Fail", data: "Failed to update Resource" });
             }
             if (!result) {
-                let newResource = new Resource({
-                    resource: resource,
-                    count: count,
-                    ts_updated: ts_updated,
-                    updated_by: updated_by,
-				});
+                let newResource = new Resource({ ...data });
 				newResource.save();
             }
             return response
