@@ -25,7 +25,7 @@ const CRARouter = express.Router();
 
 CRARouter.get('/fetch/resource/:id', FetchResource);
 CRARouter.patch('/update/resource/:id', UpdateResource);
-CRARouter.patch('/delete/resource/:id', DeleteResource);
+CRARouter.delete('/delete/resource/:id', DeleteResource);
 CRARouter.get('/fetch/risk_profile/:id', FetchRiskProfile);
 CRARouter.patch('/update/risk_profile/:id', UpdateRiskProfile);
 CRARouter.delete('/delete/risk_profile/:id', DeleteRiskProfile);
