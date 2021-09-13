@@ -9,7 +9,7 @@ export async function FetchResource(request, response){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: err });
+                .json({ message: "Fail", data: "Failed to fetch Resource data"});
             }
             if (!result) {
                 return response
@@ -41,7 +41,7 @@ export async function FetchAllResource(request, response){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: err });
+                .json({ message: "Fail", data: "Failed to fetch Resource data" });
             }
             if (!result) {
                 return response
@@ -101,7 +101,7 @@ export async function DeleteResource(request, response){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: `Failed to delete Resource data: ${err}`});
+                .json({ message: "Fail", data: "Failed to delete Resource data"});
             }
             if (!result) {
                 return response

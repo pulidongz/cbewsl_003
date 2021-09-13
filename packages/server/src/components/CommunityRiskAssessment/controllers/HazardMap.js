@@ -8,7 +8,7 @@ export async function FetchAllHazardMap(request, response){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: `Failed to fetch Hazard Map: ${err}`});
+                .json({ message: "Fail", data: "Failed to fetch Hazard Map" });
             }
             if (!result) {
                 return response
@@ -37,7 +37,7 @@ export async function DeleteHazardMap(request, response){
             if (err) {
                 return response
                 .status(400)
-        .json({ message: "Fail", data: `Failed to delete Hazard Map: ${err}`});
+        .json({ message: "Fail", data: "Failed to delete Hazard Map" });
             }
             if (!result) {
                 return response
@@ -74,7 +74,7 @@ export async function UploadHazardMap(request, response){
                 if (err) {
                     return response
                     .status(500)
-                    .json({ message: "Fail", data: `Failed to upload Hazard Map: ${err}` });
+                    .json({ message: "Fail", data: "Failed to upload Hazard Map" });
                 }
                 return response
                 .status(200)

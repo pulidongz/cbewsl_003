@@ -7,7 +7,7 @@ export async function FetchRiskProfile(request, response){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: err });
+                .json({ message: "Fail", data: "Failed to fetch Risk Profile data" });
             }
             if (!result) {
                 return response
@@ -39,7 +39,7 @@ export async function FetchAllRiskProfile(request, response){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: `Failed to fetch Risk Profile data: ${err}`});
+                .json({ message: "Fail", data: "Failed to fetch Risk Profile data"});
             }
             if (!result) {
                 return response
@@ -99,7 +99,7 @@ export async function DeleteRiskProfile(request, response){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: `Failed to delete Risk Profile data: ${err}`});
+                .json({ message: "Fail", data: "Failed to delete Risk Profile data" });
             }
             if (!result) {
                 return response
