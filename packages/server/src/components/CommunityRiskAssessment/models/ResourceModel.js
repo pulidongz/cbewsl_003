@@ -4,6 +4,12 @@ import connDb from '../../../utils/database.js';
 
 const ResourceSchema = new mongoose.Schema(
 	{
+		site_id:{
+			type: Number,
+			required: true,
+			trim: true,
+			maxLength: 2
+		},
 		resource: {
 			type: String,
 			required: true,

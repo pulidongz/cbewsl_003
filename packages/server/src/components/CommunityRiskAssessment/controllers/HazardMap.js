@@ -2,8 +2,9 @@ import HazardMap from '../models/HazardMapModel.js';
 
 
 export async function FetchAllHazardMap(request, response){
+    const site_id = request.params.site_id;
     try {
-        await HazardMap.find({}, (err, result) => {
+        await HazardMap.find({site_id: site_id}, (err, result) => {
             if (err) {
                 return response
                 .status(400)

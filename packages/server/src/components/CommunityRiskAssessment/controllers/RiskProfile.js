@@ -3,43 +3,56 @@ import RiskProfile from '../models/RiskProfileModel.js';
 export async function FetchRiskProfile(request, response){
     const rp_id = request.params.id;
     try {
-        if(rp_id === "all"){
-            await RiskProfile.find({risk_count:{$gt: 0}}, (err, result) => {
-                if (err) {
-                    return response
-                    .status(400)
-                    .json({ message: "Fail", data: `Failed to fetch Risk Profile data: ${err}`});
-                }
-                if (!result) {
-                    return response
-                    .status(404)
-                    .json({
-                        message: "Fail", data: "Risk Profile data does not exist"
-                    });
-                }
+        await RiskProfile.findById(rp_id, (err, result) => {
+            if (err) {
                 return response
-                .status(200)
-                .json({ message: "Success", data: result })
-            })
-        } else {
-            await RiskProfile.findById(rp_id, (err, result) => {
-                if (err) {
-                    return response
-                    .status(400)
-                    .json({ message: "Fail", data: err });
-                }
-                if (!result) {
-                    return response
-                    .status(404)
-                    .json({ message: "Fail", data: "Risk Profile data does not exist" });
-                }
+                .status(400)
+                .json({ message: "Fail", data: err });
+            }
+            if (!result) {
                 return response
-                .status(200)
-                .json({ message: "Success", data: result })
-            })
-        }   
-    } 
-    catch(err) {
+                .status(404)
+                .json({ message: "Fail", data: "Risk Profile data does not exist" });
+            }
+            return response
+            .status(200)
+            .json({ message: "Success", data: result })
+        }) 
+    } catch(err) {
+        console.log(err);
+        return response
+        .status(400)
+        .json({ message: "Fail", data: `Failed to fetch Risk Profile data: ${err}`});
+    };
+}
+
+export async function FetchAllRiskProfile(request, response){
+    const site_id = request.params.site_id;
+    try {
+        await RiskProfile.find(
+            {
+                $and:[
+                    {site_id: site_id},
+                    {risk_count:{$gt: 0}}
+                ]
+            }, (err, result) => {
+            if (err) {
+                return response
+                .status(400)
+                .json({ message: "Fail", data: `Failed to fetch Risk Profile data: ${err}`});
+            }
+            if (!result) {
+                return response
+                .status(404)
+                .json({
+                    message: "Fail", data: "Risk Profile data does not exist"
+                });
+            }
+            return response
+            .status(200)
+            .json({ message: "Success", data: result })
+        })
+    } catch(err) {
         console.log(err);
         return response
         .status(400)

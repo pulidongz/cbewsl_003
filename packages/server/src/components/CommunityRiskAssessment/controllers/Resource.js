@@ -5,43 +5,56 @@ import Resource from '../models/ResourceModel.js';
 export async function FetchResource(request, response){
     const resource_id = request.params.id;
     try {
-        if(resource_id === "all"){
-            await Resource.find({count:{$gt: 0}}, (err, result) => {
-                if (err) {
-                    return response
-                    .status(400)
-                    .json({ message: "Fail", data: err });
-                }
-                if (!result) {
-                    return response
-                    .status(404)
-                    .json({
-                        message: "Fail", data: "Resource data does not exist"
-                    });
-                }
+        await Resource.findById(resource_id, (err, result) => {
+            if (err) {
                 return response
-                .status(200)
-                .json({ message: "Success", data: result })
-            })
-        } else {
-            await Resource.findById(resource_id, (err, result) => {
-                if (err) {
-                    return response
-                    .status(400)
-                    .json({ message: "Fail", data: err });
-                }
-                if (!result) {
-                    return response
-                    .status(404)
-                    .json({ message: "Fail", data: "Resource data does not exist" });
-                }
+                .status(400)
+                .json({ message: "Fail", data: err });
+            }
+            if (!result) {
                 return response
-                .status(200)
-                .json({ message: "Success", data: result })
-            })
-        }   
-    } 
-    catch(err) {
+                .status(404)
+                .json({ message: "Fail", data: "Resource data does not exist" });
+            }
+            return response
+            .status(200)
+            .json({ message: "Success", data: result })
+        });
+    } catch(err) {
+        console.log(err);
+        return response
+        .status(400)
+        .json({ message: "Fail", data: `Failed to fetch Resource data: ${err}`});
+    };
+}
+
+export async function FetchAllResource(request, response){
+    const site_id = request.params.site_id;
+    try {
+        await Resource.find(
+            {
+                $and:[
+                    {site_id: site_id},
+                    {count:{$gt: 0}}
+                ]
+            }, (err, result) => {
+            if (err) {
+                return response
+                .status(400)
+                .json({ message: "Fail", data: err });
+            }
+            if (!result) {
+                return response
+                .status(404)
+                .json({
+                    message: "Fail", data: "Resource data does not exist"
+                });
+            }
+            return response
+            .status(200)
+            .json({ message: "Success", data: result })
+        });
+    } catch(err) {
         console.log(err);
         return response
         .status(400)

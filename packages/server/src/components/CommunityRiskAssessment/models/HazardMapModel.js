@@ -4,6 +4,12 @@ import connDb from '../../../utils/database.js';
 
 const HazardMapSchema = new mongoose.Schema(
 	{
+		site_id:{
+			type: Number,
+			required: true,
+			trim: true,
+			maxLength: 2
+		},
 		filename: {
 			type: String,
 			required: true,
