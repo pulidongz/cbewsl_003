@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import connDb from '../../../utils/database.js';
+import Users from '../../UserManagement/models/Users.js';
 
 
 const RiskProfileSchema = new mongoose.Schema(
@@ -32,18 +33,18 @@ const RiskProfileSchema = new mongoose.Schema(
 			required: true,
 			trim: true,
 		},
-		ts_updated: {
-			type: String,
-			required: true,
-			trim: true,
-		},
 		updated_by: {
-			type: String,
+			type: mongoose.Schema.Types.ObjectId,
 			required: true,
-			trim: true,
-			maxLength: 24,
+			ref: Users
 		},
-	}
+	},
+	{
+		timestamps: { 
+			createdAt: 'ts_uploaded', 
+			updatedAt: 'ts_updated' 
+		}
+	},
 );
 
 const RiskProfile = connDb.SiteCollections.model('risk_profile', RiskProfileSchema);

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import connDb from '../../../utils/database.js';
-
+import Users from '../../UserManagement/models/Users.js';
 
 const ResourceSchema = new mongoose.Schema(
 	{
@@ -14,7 +14,6 @@ const ResourceSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 			trim: true,
-			unique: true
 		},
 		count: {
 			type: Number,
@@ -23,23 +22,18 @@ const ResourceSchema = new mongoose.Schema(
 			maxLength: 10,
 			default: 0,
 		},
-		ts_updated: {
-			type: String,
-			required: true,
-			trim: true,
-		},
-		// ts_updated: {
-		// 	type: Date,
-		// 	required: true,
-		// 	default: Date.now()
-		// },
 		updated_by: {
-			type: String,
+			type: mongoose.Schema.Types.ObjectId,
 			required: true,
-			trim: true,
-			maxLength: 24,
+			ref: Users
 		},
-	}
+	},
+	{
+		timestamps: { 
+			createdAt: 'ts_upload', 
+			updatedAt: 'ts_update' 
+		}
+	},
 );
 
 const Resource = connDb.SiteCollections.model('resources', ResourceSchema);

@@ -5,11 +5,13 @@ import Resource from '../models/ResourceModel.js';
 export async function FetchResource(request, response){
     const resource_id = request.params.id;
     try {
-        await Resource.findById(resource_id, (err, result) => {
+        await Resource.findById(resource_id)
+        // .populate('updated_by')
+        .exec(function(err, result){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: "Failed to fetch Resource data"});
+                .json({ message: "Fail", data: "Please input a valid Resource ID" });
             }
             if (!result) {
                 return response
@@ -37,11 +39,14 @@ export async function FetchAllResource(request, response){
                     {site_id: site_id},
                     {count:{$gt: 0}}
                 ]
-            }, (err, result) => {
+            })
+        // .populate('updated_by')
+        .exec(function(err, result){
             if (err) {
+                console.log(err);
                 return response
                 .status(400)
-                .json({ message: "Fail", data: "Failed to fetch Resource data" });
+                .json({ message: "Fail", data: "Please input a valid Resource ID" });
             }
             if (!result) {
                 return response
@@ -57,7 +62,7 @@ export async function FetchAllResource(request, response){
     } catch(err) {
         console.log(err);
         return response
-        .status(400)
+        .status(500)
         .json({ message: "Fail", data: `Failed to fetch all Resource data: ${err}`});
     };
 }
@@ -69,27 +74,27 @@ export async function UpdateResource(request, response){
     try {
         await Resource.findByIdAndUpdate(
             resource_id, 
-            { ...data },
-            (err, result) => {
-            if (err) {
+            { ...data })
+            .exec(function(err, result){
+                if (err) {
+                    return response
+                    .status(400)
+                    .json({ message: "Fail", data: "Please input a valid Resource ID" });
+                }
+                if (!result) {
+                    let newResource = new Resource({ ...data });
+                    newResource.save();
+                }
                 return response
-                .status(500)
-                .json({ message: "Fail", data: "Failed to update Resource" });
-            }
-            if (!result) {
-                let newResource = new Resource({ ...data });
-				newResource.save();
-            }
-            return response
-            .status(200)
-            .json({ 
-                message: "Success",
+                .status(200)
+                .json({ 
+                    message: "Success",
+                });
             });
-    	})
     } catch(err) {
         console.log(err);
         return response
-        .status(400)
+        .status(500)
         .json({ message: "Fail", data: `Failed to update Resource: ${err}`});
     };
 }
@@ -97,25 +102,26 @@ export async function UpdateResource(request, response){
 export async function DeleteResource(request, response){
     const resource_id = request.params.id;
     try {
-        await Resource.findByIdAndDelete(resource_id, (err, result) => {
+        await Resource.findByIdAndDelete(resource_id)
+        .exec(function(err, result){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: "Failed to delete Resource data"});
+                .json({ message: "Fail", data: "Please input a valid Resource ID" });
             }
             if (!result) {
                 return response
                 .status(404)
                 .json({ message: "Fail", data: "Resource data does not exist" });
-            }
+            }   
             return response
             .status(200)
             .json({ message: "Success", data: "Resource data deleted successfully" });
-        })
+        });
     } catch(err) {
         console.log(err);
         return response
-        .status(400)
+        .status(500)
         .json({ message: "Fail", data: `Failed to delete Resource data: ${err}`});
     };
 }

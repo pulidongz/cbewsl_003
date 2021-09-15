@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import connDb from '../../../utils/database.js';
+import Users from '../../UserManagement/models/Users.js';
 
 
 const HazardMapSchema = new mongoose.Schema(
@@ -27,17 +28,17 @@ const HazardMapSchema = new mongoose.Schema(
 			trim: true,
 		},
 		uploaded_by: {
-			type: String,
+			type: mongoose.Schema.Types.ObjectId,
 			required: true,
-			trim: true,
-			maxLength: 24,
+			ref: Users
 		},
-        ts_upload: {
-			type: String,
-			required: true,
-			trim: true,
-		},
-	}
+	},
+	{
+		timestamps: { 
+			createdAt: 'ts_upload', 
+			updatedAt: 'ts_update' 
+		}
+	},
 );
 
 const HazardMap = connDb.SiteCollections.model('hazard_maps', HazardMapSchema);
