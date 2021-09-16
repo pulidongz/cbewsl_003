@@ -22,6 +22,8 @@
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.7",
+    "multer": "^1.4.3",
+    "multer-gridfs-storage": "^5.0.1",
     "otp-generator": "^2.0.1",
     "validation": "^0.0.1"
   },

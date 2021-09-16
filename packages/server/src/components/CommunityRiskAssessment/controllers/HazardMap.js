@@ -10,7 +10,7 @@ export async function FetchAllHazardMap(request, response){
             if (err) {
                 return response
                 .status(400)
-                .json({ message: "Fail", data: "Please input a valid Hazard Map ID" });
+                .json({ message: "Fail", data: "Please input a valid Site ID" });
             }
             if (!result) {
                 return response

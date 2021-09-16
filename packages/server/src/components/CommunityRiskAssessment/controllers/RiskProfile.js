@@ -44,7 +44,7 @@ export async function FetchAllRiskProfile(request, response){
                 if (err) {
                     return response
                     .status(400)
-                    .json({ message: "Fail", data: "Please input a valid Risk Profile ID" });
+                    .json({ message: "Fail", data: "Please input a valid Site ID" });
                 }
                 if (!result) {
                     return response

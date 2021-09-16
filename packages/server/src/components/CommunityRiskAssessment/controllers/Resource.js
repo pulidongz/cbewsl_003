@@ -25,7 +25,7 @@ export async function FetchResource(request, response){
     } catch(err) {
         console.log(err);
         return response
-        .status(400)
+        .status(500)
         .json({ message: "Fail", data: `Failed to fetch Resource data: ${err}`});
     };
 }
@@ -46,7 +46,7 @@ export async function FetchAllResource(request, response){
                 console.log(err);
                 return response
                 .status(400)
-                .json({ message: "Fail", data: "Please input a valid Resource ID" });
+                .json({ message: "Fail", data: "Please input a valid Site ID" });
             }
             if (!result) {
                 return response

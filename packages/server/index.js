@@ -10,7 +10,7 @@ import authVerifyToken from './src/utils/authVerifyToken.js';
 
 import UserManagementRouter from './src/components/UserManagement/routes/UserManagementRouter.js';
 import CRARouter from './src/components/CommunityRiskAssessment/routes/CRARouter.js';
-
+import MaintenanceLogsRouter from './src/components/MaintenanceLogs/routes/MaintenanceLogsRouter.js';
 
 dotenv.config({path: '.env'});
 
@@ -18,6 +18,7 @@ const app = express();
 const port = process.env.PORT;
 const validity = 1000 * 60 * 60 * 24;
 
+// SESSIONS STORE
 const sessionStore = MongoStore.create({ 
   mongoUrl: 'mongodb://'+ process.env.DB_HOST +':27017/cbewsl_commons_db', 
   autoRemove: 'interval', 
@@ -61,6 +62,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/user_management', UserManagementRouter);
 app.use('/api/cra', CRARouter);
+app.use('/api', MaintenanceLogsRouter);
+
 app.use('/api/data_visualization', (req, res) => res.send('Data visualization api'));
 app.use('/api/ewi_dissemination', (req, res) => res.send('EWI dissemination api'));
 app.use('/api/surficial_data', (req, res) => res.send('Surficial data api'));
