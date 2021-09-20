@@ -4,7 +4,7 @@ import Users from '../../UserManagement/models/Users.js';
 import FileUpload from '../../_Misc/FileUpload/FUModel.js';
 
 
-const MaintenanceLogsSchema = new mongoose.Schema(
+const IncidentReportLogsSchema = new mongoose.Schema(
 	{
 		site_id:{
 			type: Number,
@@ -12,13 +12,13 @@ const MaintenanceLogsSchema = new mongoose.Schema(
 			trim: true,
 			maxLength: 2
 		},
-		maintenance_title: {
+		incident_title: {
 			type: String,
 			required: true,
 			trim: true,
 			maxLength: 100
 		},
-		maintenance_report: {
+		incident_report: {
 			type: String,
 			required: true,
 			trim: true,
@@ -28,8 +28,8 @@ const MaintenanceLogsSchema = new mongoose.Schema(
 			required: true,
 			ref: Users
 		},
-        // maintenance_files: [FileUploadSchema],
-        maintenance_files: [{
+        // incident_files: [FileUploadSchema],
+        incident_report_files: [{
 			filename: {
 				type: String,
 				required: true,
@@ -67,6 +67,6 @@ const MaintenanceLogsSchema = new mongoose.Schema(
 	},
 );
 
-const MaintenanceLogs = connDb.SiteCollections.model('maintenance_logs', MaintenanceLogsSchema);
+const IncidentReportLogs = connDb.SiteCollections.model('incident_report_logs', IncidentReportLogsSchema);
 
-export default MaintenanceLogs;
+export default IncidentReportLogs;

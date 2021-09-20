@@ -11,6 +11,7 @@ import authVerifyToken from './src/utils/authVerifyToken.js';
 import UserManagementRouter from './src/components/UserManagement/routes/UserManagementRouter.js';
 import CRARouter from './src/components/CommunityRiskAssessment/routes/CRARouter.js';
 import MaintenanceLogsRouter from './src/components/MaintenanceLogs/routes/MaintenanceLogsRouter.js';
+import IncidentReportLogsRouter from './src/components/IncidentReportLogs/routes/IncidentReportLogsRouter.js';
 
 dotenv.config({path: '.env'});
 
@@ -63,6 +64,7 @@ app.get('/', (req, res) => {
 app.use('/api/user_management', UserManagementRouter);
 app.use('/api/cra', CRARouter);
 app.use('/api', MaintenanceLogsRouter);
+app.use('/api', IncidentReportLogsRouter);
 
 app.use('/api/data_visualization', (req, res) => res.send('Data visualization api'));
 app.use('/api/ewi_dissemination', (req, res) => res.send('EWI dissemination api'));

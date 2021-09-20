@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import connDb from '../../../utils/database.js';
 
 
 const FileUploadSchema = new mongoose.Schema(
@@ -38,4 +39,6 @@ const FileUploadSchema = new mongoose.Schema(
 	},
 );
 
-export default FileUploadSchema;
+const FileUpload = connDb.Commons.model('file_upload', FileUploadSchema);
+
+export default FileUpload;
