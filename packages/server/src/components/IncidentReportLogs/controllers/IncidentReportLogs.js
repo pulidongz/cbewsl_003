@@ -1,7 +1,6 @@
 import IncidentReportLogs from "../models/IncidentReportLogsModel.js";
-import fs from "fs";
 import { FUUpsert } from "../../_Misc/FileUpload/FUController.js";
-import FileUpload from "../../_Misc/FileUpload/FUModel.js";
+
 
 export async function FetchIncidentReportLogs(request, response) {
     const ml_id = request.params.id;
