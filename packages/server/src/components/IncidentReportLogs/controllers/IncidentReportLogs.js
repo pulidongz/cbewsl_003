@@ -1,5 +1,6 @@
 import IncidentReportLogs from "../models/IncidentReportLogsModel.js";
 import fs from "fs";
+import { FUUpsert } from "../../_Misc/FileUpload/FUController.js";
 import FileUpload from "../../_Misc/FileUpload/FUModel.js";
 
 export async function FetchIncidentReportLogs(request, response) {
@@ -36,6 +37,7 @@ export async function FetchAllIncidentReportLogs(request, response) {
             { 
                 site_id: site_id     
             })
+        .populate('incident_report_files')
         .exec(function(err, result){
             if (err) {
                 console.log(err);
@@ -65,41 +67,26 @@ export async function FetchAllIncidentReportLogs(request, response) {
 export async function UpdateIncidentReportLogs(request, response) {
     const ml_id = request.params.id;
     const data = request.body;
-    const file = request.file;
+    const file = request.files;
 
-    // ***Splitting Upsert Fxn to avoid overwriting existing files when updating.
-    // Check if file exists on DB across all ML entry, then update.
+    // Upsert files to DB and upload file(s) to server
+    let fileIds = await FUUpsert(request);
+
+    // Upsert data to DB and replace "incident_report_files" array
+    // with objectIDs obtained from fileIds
     try {
-        let ml_data = await IncidentReportLogs.findOneAndUpdate(
-            // !! For now upserts only the data and a single file
-            {_id: ml_id},
-            // {$or: [ 
-            //     {_id: ml_id},
-            //     {'incident_report_files.originalname': file.originalname}
-            // ]}, 
+        await IncidentReportLogs.findOneAndUpdate(
+            {_id: ml_id },
             { 
-                //Update ML Data(Existing) and File(Existing)
                 ...data,
-                incident_report_files: [{...file}]
+                incident_report_files: fileIds
             },
-            // { upsert: true },
-            (err, foundMatch) =>{
-                console.log("foundMatch", foundMatch);
+            { upsert: true },
+            (err) =>{
                 if (err) {
                     return response
                     .status(400)
                     .json({ message: "Fail", data: `Failed to update Incident Report Logs: ${err}` });
-                }
-                // If data does not exist, INSERT new ML data and file
-                if (!foundMatch) {
-                    console.log("Inserting new ML Data and File...");
-                    let newIncidentReportLogs = new IncidentReportLogs({ 
-                         ...data,
-                         // $push: {incident_report_files: {...file}}
-                        // incident_report_files: [{...file}]
-                    });
-                    newIncidentReportLogs.incident_report_files.push(file);
-                    newIncidentReportLogs.save();
                 }
                 return response
                 .status(200)
@@ -107,18 +94,6 @@ export async function UpdateIncidentReportLogs(request, response) {
                     message: "Success",
                 });
             });
-        console.log("ml_data", ml_data);
-        // Delete old file from server
-        // if(file && ml_data && file.originalname !== ml_data.incident_report_files.originalname){
-        //     fs.unlink(`${ml_data.incident_report_files.path}`, 
-        //     (err) => {
-        //         if (err) console.log(err);
-        //         else {
-        //           console.log(`Successfully deleted ${ml_data.incident_report_files.originalname}`);}
-        //         }
-        //     );
-        // }
-        
     } catch(err) {
         console.log(err);
         return response
@@ -132,7 +107,6 @@ export async function DeleteIncidentReportLogs(request, response) {
     try {
         await IncidentReportLogs.findByIdAndDelete(ml_id)
         .exec(function(err, result){
-            console.log("result", result);
             if (err) {
                 return response
                 .status(400)
@@ -143,16 +117,6 @@ export async function DeleteIncidentReportLogs(request, response) {
                 .status(404)
                 .json({ message: "Fail", data: "Incident Report Logs data does not exist" });
             }
-            if(result){
-                //Delete old file from server
-                fs.unlink(`${result.incident_report_files[0].path}`, 
-                (err) => {
-                    if (err) console.log(err);
-                    else {
-                        console.log(`Successfully deleted ${result.incident_report_files[0].originalname}`);}
-                    }
-                );  
-            } 
             return response
             .status(200)
             .json({ message: "Success", data: "Incident Report Logs data deleted successfully" });

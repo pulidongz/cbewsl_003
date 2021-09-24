@@ -28,36 +28,11 @@ const IncidentReportLogsSchema = new mongoose.Schema(
 			required: true,
 			ref: Users
 		},
-        // incident_files: [FileUploadSchema],
-        incident_report_files: [{
-			filename: {
-				type: String,
-				required: true,
-				trim: true,
-				unique: true
-			},
-			originalname: {
-				type: String,
-				required: false,
-				trim: true
-			},
-			mimetype: {
-				type: String,
-				required: true,
-				trim: true,
-			},
-			path: {
-				type: String,
-				required: true,
-				trim: true,
-			},
-			size: {
-				type: Number,
-				required: false,
-				trim: true
-			}, 
+		incident_report_files: [{
+			type: mongoose.Schema.Types.ObjectId,
+			required: true,
+			ref: FileUpload
 		}],
-
 	},
 	{
 		timestamps: { 
