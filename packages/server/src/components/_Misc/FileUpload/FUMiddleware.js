@@ -1,53 +1,53 @@
 import multer from 'multer';
 import path from 'path';
-import { GridFsStorage } from 'multer-gridfs-storage';
-// import connDb from '../../../utils/database';
-
-//FILESYSTEM STORAGE
-// const storage = new GridFsStorage({
-//     db: connDb.Commons,
-//     file: (req, file) => {
-//         const match = [
-//           'image/png', 
-//           'image/jpeg', 
-//           'application/pdf',
-//           'application/msword',
-//           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-//           'application/vnd.ms-excel',
-//           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-//         ];
-
-//       return {
-//         filename: 'file_' + Date.now()
-//       };
-//     },
-//     cache: true,
-//   });
 
 const uploadFolder = path.join(path.resolve("."), "src/uploads");
+const maxFileSize = 5000000;
 
-const upload = multer({ 
-  storage: multer.diskStorage({
-    destination(req, file, cb) {
-      cb(null, uploadFolder);
+function FileUploadHandler(req, res, next) {
+  const upload = multer({ 
+    storage: multer.diskStorage({
+      destination(req, file, callback) {
+        callback(null, uploadFolder);
+      },
+      filename(req, file, callback) {
+        // callback(null, `${new Date().getTime()}_${file.originalname}`);
+        callback(null, `${file.originalname}`);
+      }
+    }),
+    limits: {
+      fileSize: maxFileSize
     },
-    filename(req, file, cb) {
-      cb(null, `${new Date().getTime()}_${file.originalname}`);
+    fileFilter(req, file, callback) {
+      if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
+        return callback(
+          new Error(
+            'Only upload files with jpg, jpeg, png, pdf, doc, docx, xslx, xls format'
+          )
+        );
+      }
+      // continue with upload
+      callback(undefined, true);
     }
-  }),
-  limits: {
-    fileSize: 5000000 // max file size 5MB = 5000000 bytes
-  },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
-      return cb(
-        new Error(
-          'only upload files with jpg, jpeg, png, pdf, doc, docx, xslx, xls format.'
-        )
-      );
-    }
-    cb(undefined, true); // continue with upload
-  }
-});
+  }).array('file', 10);
 
-export default upload;
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      // FILE SIZE ERROR
+      return res
+      .status(400)
+      .json({ message: "Fail", data: `Maximum file size is ${maxFileSize}MB`});
+    } else if (err) {
+      // INVALID FILE TYPE, message will return from fileFilter callback
+      return res
+      .status(400)
+      .json({ message: "Fail", data: `${err}`});
+    }
+    // Everything went fine. 
+    next()
+  })
+}
+
+export default FileUploadHandler;
+
+// export default upload;
