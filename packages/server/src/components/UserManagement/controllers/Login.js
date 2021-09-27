@@ -44,6 +44,7 @@ export default async function Login(request, response){
 					user_details: "Invalid username or password"
 				});
 			} else {
+				// Save to sessions collection
 				request.session.user_details = result;
 				console.log(request.session);
 				return response
